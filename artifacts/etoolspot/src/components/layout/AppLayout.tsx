@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useCurrentUser, useLogout } from "@/hooks/use-auth";
 import { useSettings } from "@/hooks/use-settings";
 import { NeonButton } from "@/components/ui/shared";
-import { LayoutDashboard, Wrench, Settings, ShieldAlert, CreditCard, LogOut, Menu, X, Bell } from "lucide-react";
+import { LayoutDashboard, Wrench, Settings, ShieldAlert, CreditCard, LogOut, Menu, X, Bell, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -46,6 +46,8 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+              <NavLink href="/" icon={<Home />} label="Home" onClick={() => setSidebarOpen(false)} />
+              <div className="my-2 border-t border-white/10" />
               <NavLink href="/dashboard" icon={<LayoutDashboard />} label="Dashboard" onClick={() => setSidebarOpen(false)} />
               <NavLink href="/tools" icon={<Wrench />} label="All Tools" onClick={() => setSidebarOpen(false)} />
               <NavLink href="/subscription" icon={<CreditCard />} label="Subscription" onClick={() => setSidebarOpen(false)} />

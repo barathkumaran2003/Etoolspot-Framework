@@ -12,7 +12,9 @@ import {
   Zap,
   Shield,
   Star,
+  LayoutDashboard,
 } from "lucide-react";
+import { useCurrentUser } from "@/hooks/use-auth";
 
 const tools = [
   { name: "Resume Builder", icon: FileText, desc: "Craft stunning resumes in minutes" },
@@ -64,6 +66,7 @@ const itemVariants = {
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
+  const { data: user } = useCurrentUser();
 
   return (
     <div className="min-h-screen overflow-hidden" style={{ background: "hsl(230 25% 4%)", color: "hsl(210 40% 98%)" }}>
@@ -85,20 +88,38 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/login")}
-            className="px-5 py-2 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
-            style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate("/signup")}
-            className="px-5 py-2 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg"
-            style={{ background: "linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 55%))", boxShadow: "0 0 20px hsl(180 100% 50% / 0.3)" }}
-          >
-            Get Started
-          </button>
+          {user ? (
+            /* Logged-in state: show avatar + name + go to dashboard */
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-3 px-4 py-2 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+              style={{ background: "rgba(0,255,255,0.08)", border: "1px solid rgba(0,255,255,0.25)" }}
+            >
+              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: "linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 55%))" }}>
+                {user.username.charAt(0).toUpperCase()}
+              </div>
+              <span style={{ color: "hsl(180 100% 70%)" }}>{user.username}</span>
+              <LayoutDashboard size={16} style={{ color: "hsl(180 100% 60%)" }} />
+            </button>
+          ) : (
+            /* Guest state: show Login + Get Started */
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="px-5 py-2 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/signup")}
+                className="px-5 py-2 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                style={{ background: "linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 55%))", boxShadow: "0 0 20px hsl(180 100% 50% / 0.3)" }}
+              >
+                Get Started
+              </button>
+            </>
+          )}
         </div>
       </nav>
 
