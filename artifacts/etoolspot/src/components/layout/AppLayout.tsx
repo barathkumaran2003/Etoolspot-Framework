@@ -129,9 +129,10 @@ function NavLink({ href, icon, label, className, onClick }: { href: string, icon
 
 function LogoutButton() {
   const { mutate, isPending } = useLogout();
+  const [, navigate] = useLocation();
   return (
     <button 
-      onClick={() => mutate()}
+      onClick={() => mutate(undefined, { onSuccess: () => navigate("/") })}
       disabled={isPending}
       className="w-full flex items-center justify-center gap-2 mt-2 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
     >
