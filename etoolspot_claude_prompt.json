@@ -1,0 +1,180 @@
+{
+  "project": "Etoolspot",
+  "description": "A fully frontend-only SaaS tool aggregator with a cyberpunk neon glassmorphism design. No backend — all data stored in localStorage. Built with React + Vite + TypeScript.",
+
+  "tech_stack": {
+    "framework": "React 18 + Vite + TypeScript",
+    "routing": "wouter v3 (use href not to in Redirect; use useLocation() navigate)",
+    "state_management": "TanStack Query v5 (@tanstack/react-query)",
+    "animations": "framer-motion",
+    "icons": "lucide-react",
+    "styling": "Tailwind CSS v4 + custom CSS variables (no tw-animate-css)",
+    "forms": "react-hook-form + zod",
+    "ui_components": "shadcn/ui base primitives (toaster, tooltip)"
+  },
+
+  "design_system": {
+    "theme": "Cyberpunk neon glassmorphism dark",
+    "background": "hsl(230 25% 4%)",
+    "primary_color": "hsl(180 100% 50%) — cyan neon",
+    "secondary_color": "hsl(280 100% 65%) — purple neon",
+    "glass_panel": "background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(20px)",
+    "neon_glow": "box-shadow: 0 0 20px hsl(180 100% 50% / 0.3)",
+    "gradient_text": "background: linear-gradient(to right, hsl(180 100% 50%), hsl(280 100% 65%)); -webkit-background-clip: text; -webkit-text-fill-color: transparent",
+    "font": "Google Fonts — Orbitron (display/headings) + Inter (body)",
+    "custom_css_classes": ["glass-panel", "glass-card", "neon-border"],
+    "background_glows": "Fixed radial gradient blobs (cyan top-left, purple top-right, pink bottom-center) at low opacity for ambient depth"
+  },
+
+  "data_model": {
+    "storage": "localStorage only — no backend",
+    "keys": {
+      "etoolspot_users": "User[] array",
+      "etoolspot_currentUser": "User | null (active session)",
+      "etoolspot_tools": "Tool[] array",
+      "etoolspot_settings": "Settings object"
+    },
+    "types": {
+      "Role": "'ADMIN' | 'USER'",
+      "Plan": "'FREE' | 'PRO' | 'PREMIUM'",
+      "User": "{ id, username, email, mobile, password?, role: Role, subscription: Plan, profilePhoto?, createdAt }",
+      "Tool": "{ id, name, description, icon, url, category, isPremium: boolean, isActive: boolean, createdAt }",
+      "Settings": "{ siteName, primaryColor, secondaryColor }"
+    },
+    "seed_admin": {
+      "username": "Admin Barath",
+      "email": "barathkumaran2003@gmail.com",
+      "password": "Barath@1234",
+      "role": "ADMIN",
+      "subscription": "PREMIUM"
+    },
+    "seed_tools": [
+      { "name": "Resume Builder", "icon": "FileText", "category": "Productivity", "isPremium": false },
+      { "name": "QR Code Generator", "icon": "QrCode", "category": "Utilities", "isPremium": false },
+      { "name": "Barcode Generator", "icon": "Barcode", "category": "Utilities", "isPremium": true },
+      { "name": "Image to Text", "icon": "ScanText", "category": "AI Tools", "isPremium": true },
+      { "name": "EXE/APK Converter", "icon": "Package", "category": "Developer", "isPremium": true }
+    ]
+  },
+
+  "mock_api": {
+    "file": "src/lib/mock-api.ts",
+    "description": "All API functions use localStorage with a 400ms simulated delay. getCurrentUser has NO delay (reads synchronously). Exported as api.{method}.",
+    "methods": [
+      "getCurrentUser(): Promise<User | null> — reads etoolspot_currentUser directly, no delay",
+      "login({ email, password?, isGoogle? }): Promise<User> — validates credentials or creates Google mock user",
+      "signup(data: Partial<User>): Promise<User> — creates new USER role with FREE plan",
+      "logout(): Promise<void> — removes etoolspot_currentUser",
+      "getUsers(): Promise<User[]>",
+      "updateUser(id, updates): Promise<User> — also updates etoolspot_currentUser if same id",
+      "getTools(): Promise<Tool[]>",
+      "saveTool(tool): Promise<Tool> — upsert by id",
+      "deleteTool(id): Promise<void>",
+      "getSettings(): Promise<Settings>",
+      "saveSettings(settings): Promise<Settings>"
+    ]
+  },
+
+  "auth_hooks": {
+    "file": "src/hooks/use-auth.ts",
+    "description": "TanStack Query hooks wrapping mock-api. useCurrentUser uses initialData to read from localStorage synchronously on first render — prevents blank screen flash.",
+    "hooks": [
+      "useCurrentUser() — queryKey: ['currentUser'], initialData: reads etoolspot_currentUser from localStorage, staleTime: Infinity",
+      "useLogin() — mutation, onSuccess sets queryClient data",
+      "useSignup() — mutation, onSuccess sets queryClient data",
+      "useLogout() — mutation, onSuccess nulls currentUser and clears queryClient"
+    ]
+  },
+
+  "routing": {
+    "library": "wouter v3 with WouterRouter base={import.meta.env.BASE_URL.replace(/\\/$, '')}",
+    "auth_gate": "AuthGate component reads useCurrentUser(). If no user, renders <Login /> directly (no redirect) — avoids URL flash. Wraps all protected routes.",
+    "routes": {
+      "/": "LandingPage (public)",
+      "/login": "Login (public) — redirects to /dashboard on success",
+      "/signup": "Signup (public) — redirects to /dashboard on success",
+      "/dashboard": "AuthGate > ProtectedLayout > Dashboard",
+      "/tools": "AuthGate > ProtectedLayout > Tools",
+      "/settings": "AuthGate > ProtectedLayout > Settings",
+      "/admin": "AuthGate > ProtectedLayout > Admin",
+      "/subscription": "AuthGate > ProtectedLayout > Subscription"
+    }
+  },
+
+  "pages": {
+    "landing": {
+      "route": "/",
+      "sections": ["Navbar", "Hero", "Tools Grid", "Features", "Pricing (3 plans)", "CTA", "Footer"],
+      "navbar_behavior": "If user is logged in: show avatar initial + username + dashboard icon button (navigates to /dashboard). If not logged in: show Login + Get Started buttons.",
+      "hero": "Full-screen with animated badge, large uppercase heading with gradient text, subtext, two CTA buttons, stats row (5+ Tools, 10K+ Users, Free to Start)",
+      "tools_grid": "5 tool cards with lucide icons, hover glow effect",
+      "pricing": "3 cards — Free ($0), Pro ($9.99/mo, highlighted with Most Popular badge), Premium ($19.99/mo)",
+      "animations": "framer-motion staggerChildren on scroll (whileInView), hero animates on mount"
+    },
+    "login": {
+      "fields": ["Email (Email Sequence)", "Password (Access Code)"],
+      "extras": ["Google sign-in mock button", "Link to signup"],
+      "on_success": "navigate to /dashboard",
+      "style": "Centered card with cyberpunk labels"
+    },
+    "signup": {
+      "fields": ["Username", "Email", "Mobile", "Password", "Confirm Password"],
+      "on_success": "navigate to /dashboard"
+    },
+    "dashboard": {
+      "content": "Welcome greeting with username, subscription badge, tool cards grid, quick stats (total tools, active tools, premium tools), recent activity section"
+    },
+    "tools": {
+      "content": "Searchable/filterable grid of all tools. Filter by category and premium/free. Each card shows icon, name, description, badge (FREE/PRO), and a launch button (disabled if tool isPremium and user is FREE plan)."
+    },
+    "settings": {
+      "content": "Edit profile (username, email, mobile, profile photo), change password, theme customization (primaryColor, secondaryColor CSS variables applied live to document.documentElement)"
+    },
+    "admin": {
+      "access": "Only visible in sidebar for ADMIN role users",
+      "content": "User management table (view all users, change role/plan), Tool management (add/edit/delete tools with form modal), Site settings (siteName, colors)"
+    },
+    "subscription": {
+      "content": "Current plan display, upgrade cards for Pro and Premium plans with feature lists, upgrade button (updates user subscription in localStorage)"
+    }
+  },
+
+  "layout": {
+    "file": "src/components/layout/AppLayout.tsx",
+    "component": "ProtectedLayout",
+    "sidebar": {
+      "desktop": "Fixed 256px wide sidebar, always visible",
+      "mobile": "Hidden by default, toggled by hamburger menu with overlay backdrop",
+      "items": [
+        "Home (/) — House icon — navigates to landing page",
+        "--- divider ---",
+        "Dashboard (/dashboard) — LayoutDashboard icon",
+        "All Tools (/tools) — Wrench icon",
+        "Subscription (/subscription) — CreditCard icon",
+        "Settings (/settings) — Settings icon",
+        "--- divider (ADMIN only) ---",
+        "Admin Panel (/admin) — ShieldAlert icon (secondary color)"
+      ],
+      "bottom": "User avatar (first letter), username, subscription plan label, Logout button"
+    },
+    "top_header": "Desktop only — Bell icon with animated pulse dot, ONLINE status badge"
+  },
+
+  "global_settings": {
+    "description": "On app mount, reads etoolspot_settings from localStorage and applies primaryColor and secondaryColor to CSS variables (--primary, --secondary) on document.documentElement to prevent flicker.",
+    "component": "GlobalSettingsApplier (renders null, useEffect only)"
+  },
+
+  "implementation_notes": [
+    "Use initialData in useCurrentUser to read localStorage synchronously — prevents the blank screen or login flash on protected pages",
+    "AuthGate renders <Login /> inline when unauthenticated, does NOT redirect — keeps URL stable and avoids flash",
+    "CSS: put @import url(Google Fonts) FIRST, then @import 'tailwindcss' — Tailwind v4 breaks if font import is after",
+    "Wouter v3: use href (not to) in Link/NavLink components",
+    "WouterRouter base must strip trailing slash from BASE_URL",
+    "All protected page redirects after login/signup go to /dashboard, not /",
+    "Sidebar Dashboard NavLink href is /dashboard not /",
+    "Settings color changes apply CSS variables live on document.documentElement so the UI updates in real time without reload",
+    "simulateDelay (400ms) is used for all write operations to mimic network latency, but NOT on getCurrentUser for instant auth check",
+    "Admin seed is only created if etoolspot_users array is empty — prevents duplicating on reload"
+  ]
+}

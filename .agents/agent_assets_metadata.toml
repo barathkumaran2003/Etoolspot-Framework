@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "WJFvZTpdyNFbnlTQTdD0H"
+uri = "file://etoolspot_claude_prompt.json"
+type = "unspecified"
+title = "Etoolspot — Complete Claude Build Prompt (JSON)"
