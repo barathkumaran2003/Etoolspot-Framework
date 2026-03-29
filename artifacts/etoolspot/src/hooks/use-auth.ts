@@ -5,6 +5,15 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: ["currentUser"],
     queryFn: api.getCurrentUser,
+    initialData: () => {
+      try {
+        const val = localStorage.getItem('etoolspot_currentUser');
+        return val ? JSON.parse(val) : null;
+      } catch {
+        return null;
+      }
+    },
+    staleTime: Infinity,
   });
 }
 

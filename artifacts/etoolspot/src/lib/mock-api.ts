@@ -94,7 +94,7 @@ export function initializeStorage() {
 export const api = {
   // Auth & Users
   getCurrentUser: async (): Promise<User | null> => {
-    await simulateDelay();
+    // No delay — localStorage is synchronous, instant response
     return getStorage<User | null>('etoolspot_currentUser', null);
   },
   

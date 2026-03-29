@@ -2,23 +2,15 @@ import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useCurrentUser, useLogout } from "@/hooks/use-auth";
 import { useSettings } from "@/hooks/use-settings";
-import { LoadingScreen, NeonButton } from "@/components/ui/shared";
+import { NeonButton } from "@/components/ui/shared";
 import { LayoutDashboard, Wrench, Settings, ShieldAlert, CreditCard, LogOut, Menu, X, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { data: user, isLoading } = useCurrentUser();
-  const [, setLocation] = useLocation();
+  const { data: user } = useCurrentUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  React.useEffect(() => {
-    if (!isLoading && !user) {
-      setLocation("/login");
-    }
-  }, [user, isLoading, setLocation]);
-
-  if (isLoading) return <LoadingScreen />;
   if (!user) return null;
 
   return (
