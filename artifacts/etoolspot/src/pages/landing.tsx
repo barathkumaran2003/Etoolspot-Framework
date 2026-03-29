@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
   Sparkles,
@@ -13,8 +13,11 @@ import {
   Shield,
   Star,
   LayoutDashboard,
+  Settings,
+  LogOut,
+  ChevronDown,
 } from "lucide-react";
-import { useCurrentUser } from "@/hooks/use-auth";
+import { useCurrentUser, useLogout } from "@/hooks/use-auth";
 
 const tools = [
   { name: "Resume Builder", icon: FileText, desc: "Craft stunning resumes in minutes" },
@@ -67,6 +70,19 @@ const itemVariants = {
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const { data: user } = useCurrentUser();
+  const { mutate: logout } = useLogout();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen overflow-hidden" style={{ background: "hsl(230 25% 4%)", color: "hsl(210 40% 98%)" }}>
@@ -89,18 +105,59 @@ export default function LandingPage() {
 
         <div className="flex items-center gap-3">
           {user ? (
-            /* Logged-in state: show avatar + name + go to dashboard */
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-3 px-4 py-2 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
-              style={{ background: "rgba(0,255,255,0.08)", border: "1px solid rgba(0,255,255,0.25)" }}
-            >
-              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: "linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 55%))" }}>
-                {user.username.charAt(0).toUpperCase()}
-              </div>
-              <span style={{ color: "hsl(180 100% 70%)" }}>{user.username}</span>
-              <LayoutDashboard size={16} style={{ color: "hsl(180 100% 60%)" }} />
-            </button>
+            /* Logged-in state: avatar + name + dropdown */
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen(prev => !prev)}
+                className="flex items-center gap-3 px-4 py-2 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                style={{ background: "rgba(0,255,255,0.08)", border: "1px solid rgba(0,255,255,0.25)" }}
+              >
+                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: "linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 55%))" }}>
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ color: "hsl(180 100% 70%)" }}>{user.username}</span>
+                <ChevronDown size={14} style={{ color: "hsl(180 100% 60%)", transform: dropdownOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
+              </button>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-48 rounded-xl overflow-hidden z-50"
+                    style={{ background: "rgba(10,12,20,0.95)", border: "1px solid rgba(0,255,255,0.2)", backdropFilter: "blur(20px)", boxShadow: "0 0 30px rgba(0,255,255,0.1)" }}
+                  >
+                    <button
+                      onClick={() => { setDropdownOpen(false); navigate("/dashboard"); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-white/5"
+                      style={{ color: "hsl(210 40% 80%)" }}
+                    >
+                      <LayoutDashboard size={15} style={{ color: "hsl(180 100% 60%)" }} />
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => { setDropdownOpen(false); navigate("/settings"); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-white/5"
+                      style={{ color: "hsl(210 40% 80%)" }}
+                    >
+                      <Settings size={15} style={{ color: "hsl(180 100% 60%)" }} />
+                      Settings
+                    </button>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+                    <button
+                      onClick={() => { setDropdownOpen(false); logout(undefined, { onSuccess: () => navigate("/") }); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-red-500/10"
+                      style={{ color: "hsl(0 80% 60%)" }}
+                    >
+                      <LogOut size={15} />
+                      Log Out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : (
             /* Guest state: show Login + Get Started */
             <>
