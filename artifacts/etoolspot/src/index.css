@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-destructive: hsl(var(--destructive));
+}
+
+:root {
+  /* Deep Navy / Cyberpunk Dark Theme */
+  --background: 230 25% 4%;
+  --foreground: 210 40% 98%;
+  
+  /* Neon Cyan */
+  --primary: 180 100% 50%;
+  --primary-foreground: 230 25% 4%;
+  
+  /* Neon Purple */
+  --secondary: 280 100% 65%;
+  --secondary-foreground: 210 40% 98%;
+  
+  /* Neon Pink */
+  --accent: 320 100% 60%;
+  --accent-foreground: 210 40% 98%;
+  
+  /* Glass and Muted */
+  --muted: 230 20% 12%;
+  --muted-foreground: 215 20% 65%;
+  
+  /* Borders and Cards */
+  --border: 230 25% 15%;
+  --card: 230 25% 6%;
+  --card-foreground: 210 40% 98%;
+
+  --destructive: 0 100% 60%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased font-body min-h-screen selection:bg-primary/30 selection:text-primary;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(0, 255, 255, 0.03), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(180, 0, 255, 0.03), transparent 25%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-wide uppercase;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-background/40 backdrop-blur-xl border border-white/5 shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-primary/40 bg-white/10 shadow-[0_8px_32px_0_rgba(0,255,255,0.15)];
+  }
+
+  .neon-text {
+    text-shadow: 0 0 15px hsl(var(--primary) / 0.5);
+  }
+
+  .neon-border {
+    @apply border border-primary/50 shadow-[0_0_15px_rgba(0,255,255,0.3),inset_0_0_15px_rgba(0,255,255,0.1)];
+  }
+
+  .neon-border-secondary {
+    @apply border border-secondary/50 shadow-[0_0_15px_rgba(180,0,255,0.3),inset_0_0_15px_rgba(180,0,255,0.1)];
+  }
+}
+
+/* Custom Scrollbar for the tech aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full border border-background;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/50;
+}

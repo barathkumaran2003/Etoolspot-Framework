@@ -1,0 +1,130 @@
+{
+  "project_name": "Etoolspot",
+  "framework": "React + Vite",
+  "description": "A modern SaaS platform called Etoolspot that aggregates multiple utility tools like Resume Builder, QR Generator, Barcode Generator, Image to Text, EXE/APK Converter, and future AI tools. Includes role-based authentication, admin dashboard, subscription system, and localStorage-based persistence.",
+  "features": {
+    "authentication": {
+      "methods": ["Google Sign-In", "Manual Login"],
+      "manual_fields": ["username", "email", "mobile", "password"],
+      "default_admin": {
+        "email": "barathkumaran2003@gmail.com",
+        "password": "Barath@1234",
+        "role": "ADMIN"
+      },
+      "roles": ["ADMIN", "USER"],
+      "default_role": "USER"
+    },
+    "user_features": [
+      "Sign up / Login",
+      "Access all tools",
+      "Subscription purchase",
+      "Profile settings",
+      "Edit username",
+      "Edit email",
+      "Change password (email verification simulation)",
+      "Upload/change profile photo"
+    ],
+    "admin_features": [
+      "Add new tool website",
+      "Edit tool details",
+      "Manage subscriptions",
+      "Upgrade user to admin",
+      "Edit logo",
+      "Edit website name",
+      "Customize theme colors",
+      "View users list"
+    ],
+    "tools": [
+      "Resume Builder",
+      "QR Code Generator",
+      "Barcode Generator",
+      "Image to Text",
+      "EXE/APK Converter"
+    ],
+    "future_tools_support": true,
+    "subscription": {
+      "plans": ["Free", "Pro", "Premium"],
+      "payment_simulation": true
+    },
+    "storage": {
+      "type": "localStorage",
+      "persist": true,
+      "keys": [
+        "users",
+        "currentUser",
+        "tools",
+        "subscriptions",
+        "settings"
+      ]
+    }
+  },
+  "ui_design": {
+    "theme": "Ultra Modern Glassmorphism + Neon Gradient",
+    "style": [
+      "Dark + Light mode",
+      "Blur glass cards",
+      "Gradient buttons",
+      "Animated hover effects",
+      "Floating sidebar",
+      "Responsive design"
+    ],
+    "layout": {
+      "navbar": "Top sticky with logo and profile",
+      "sidebar": "Collapsible animated sidebar",
+      "dashboard": "Grid cards with tool previews",
+      "settings": "Tabbed modern UI"
+    },
+    "animations": [
+      "Framer Motion transitions",
+      "Hover scale effects",
+      "Page fade transitions"
+    ],
+    "images": [
+      "Modern tech dashboard background",
+      "AI abstract gradients",
+      "Digital tools illustrations",
+      "Futuristic neon UI elements"
+    ]
+  },
+  "pages": [
+    "Login",
+    "Signup",
+    "Dashboard",
+    "Tools Page",
+    "Settings",
+    "Admin Panel",
+    "Subscription Page"
+  ],
+  "routing": {
+    "protected_routes": true,
+    "admin_routes": true
+  },
+  "tech_stack": {
+    "frontend": "React + Vite",
+    "state_management": "Context API",
+    "styling": "Tailwind CSS",
+    "icons": "Lucide React",
+    "animations": "Framer Motion"
+  },
+  "folder_structure": {
+    "src": [
+      "components",
+      "pages",
+      "context",
+      "hooks",
+      "utils",
+      "assets"
+    ]
+  },
+  "special_instructions": [
+    "Do not use backend or database",
+    "Use localStorage for all persistence",
+    "Keep UI highly unique and not generic",
+    "Make scalable architecture for adding future tools",
+    "Ensure clean reusable components",
+    "Admin and User dashboards must be different",
+    "Google Sign-In should be mocked (no real API required)",
+    "Password reset should simulate email verification"
+  ],
+  "run_command": "npm install && npm run dev"
+}

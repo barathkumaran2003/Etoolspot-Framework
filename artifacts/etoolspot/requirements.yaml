@@ -1,0 +1,21 @@
+packages:
+  "framer-motion": "For page transitions, hover effects, and glassmorphism animations"
+  "react-hook-form": "Form state management"
+  "@hookform/resolvers": "Zod schema validation for forms"
+  "zod": "Type-safe schema validation"
+  "date-fns": "Date formatting for subscriptions and user tables"
+  "lucide-react": "Tech-focused iconography"
+
+images:
+  - path: "artifacts/etoolspot/public/images/logo.png"
+    description: "Abstract minimal neon geometric 'E' logo mark, glowing cyan and purple, transparent background, highly futuristic vector style"
+    aspect_ratio: "1:1"
+  - path: "artifacts/etoolspot/public/images/hero-bg.png"
+    description: "Ultra futuristic dark cyberpunk grid background with glowing neon cyan and purple light leaks and subtle holographic particle dust"
+    aspect_ratio: "16:9"
+
+notes:
+  - Application relies entirely on localStorage for persistence (no backend).
+  - Wouter is used for routing.
+  - Mock API hooks simulate network latency with TanStack Query.
+  - The default admin user is seeded on first load.
