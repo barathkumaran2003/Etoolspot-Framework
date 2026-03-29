@@ -46,7 +46,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-              <NavLink href="/" icon={<LayoutDashboard />} label="Dashboard" onClick={() => setSidebarOpen(false)} />
+              <NavLink href="/dashboard" icon={<LayoutDashboard />} label="Dashboard" onClick={() => setSidebarOpen(false)} />
               <NavLink href="/tools" icon={<Wrench />} label="All Tools" onClick={() => setSidebarOpen(false)} />
               <NavLink href="/subscription" icon={<CreditCard />} label="Subscription" onClick={() => setSidebarOpen(false)} />
               <NavLink href="/settings" icon={<Settings />} label="Settings" onClick={() => setSidebarOpen(false)} />

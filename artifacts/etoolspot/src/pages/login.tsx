@@ -20,7 +20,7 @@ export default function Login() {
   const { mutate: login, isPending, error } = useLogin();
 
   React.useEffect(() => {
-    if (user) setLocation("/");
+    if (user) setLocation("/dashboard");
   }, [user, setLocation]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
@@ -29,13 +29,13 @@ export default function Login() {
 
   const onSubmit = (data: LoginForm) => {
     login(data, {
-      onSuccess: () => setLocation("/")
+      onSuccess: () => setLocation("/dashboard")
     });
   };
 
   const handleGoogleLogin = () => {
     login({ email: "guest" + Math.floor(Math.random()*1000) + "@google.com", isGoogle: true }, {
-      onSuccess: () => setLocation("/")
+      onSuccess: () => setLocation("/dashboard")
     });
   };
 

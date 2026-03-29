@@ -7,6 +7,7 @@ import { initializeStorage } from "@/lib/mock-api";
 import { useCurrentUser } from "@/hooks/use-auth";
 
 import { ProtectedLayout } from "@/components/layout/AppLayout";
+import LandingPage from "@/pages/landing";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
@@ -30,9 +31,13 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 function Router() {
   return (
     <Switch>
+      {/* Public routes */}
+      <Route path="/" component={LandingPage} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
-      <Route path="/" component={() => (
+
+      {/* Protected routes */}
+      <Route path="/dashboard" component={() => (
         <AuthGate>
           <ProtectedLayout><Dashboard /></ProtectedLayout>
         </AuthGate>

@@ -26,7 +26,7 @@ export default function Signup() {
   const { mutate: signup, isPending, error } = useSignup();
 
   React.useEffect(() => {
-    if (user) setLocation("/");
+    if (user) setLocation("/dashboard");
   }, [user, setLocation]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({
@@ -35,7 +35,7 @@ export default function Signup() {
 
   const onSubmit = (data: SignupForm) => {
     signup(data, {
-      onSuccess: () => setLocation("/")
+      onSuccess: () => setLocation("/dashboard")
     });
   };
 

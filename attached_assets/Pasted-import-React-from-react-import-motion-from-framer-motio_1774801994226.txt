@@ -1,0 +1,182 @@
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  Sparkles,
+  QrCode,
+  FileText,
+  Barcode,
+  Image,
+  Rocket,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const tools = [
+  { name: "Resume Builder", icon: FileText },
+  { name: "QR Generator", icon: QrCode },
+  { name: "Barcode Generator", icon: Barcode },
+  { name: "Image to Text", icon: Image },
+];
+
+export default function LandingPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="bg-[#0F172A] text-white min-h-screen overflow-hidden">
+      
+      {/* NAVBAR */}
+      <div className="flex justify-between items-center px-8 py-4 backdrop-blur-md bg-white/5 border-b border-white/10">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+          Etoolspot
+        </h1>
+
+        <div className="space-x-4">
+          <button
+            onClick={() => navigate("/login")}
+            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => navigate("/signup")}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:scale-105 transition"
+          >
+            Get Started
+          </button>
+        </div>
+      </div>
+
+      {/* HERO SECTION */}
+      <div className="flex flex-col items-center text-center mt-20 px-6">
+        <motion.h1
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-bold leading-tight"
+        >
+          All Your Digital Tools <br />
+          <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+            In One Platform
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6 text-gray-300 max-w-xl"
+        >
+          Build, Convert, Generate & Automate everything from a single place.
+          Powerful tools designed for students, developers, and professionals.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-8 flex gap-4"
+        >
+          <button
+            onClick={() => navigate("/signup")}
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:scale-105 transition flex items-center gap-2"
+          >
+            <Rocket size={18} /> Get Started
+          </button>
+
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition"
+          >
+            Explore Tools
+          </button>
+        </motion.div>
+      </div>
+
+      {/* TOOLS SECTION */}
+      <div className="mt-24 px-10">
+        <h2 className="text-3xl font-semibold text-center mb-12">
+          Powerful Tools
+        </h2>
+
+        <div className="grid md:grid-cols-4 gap-6">
+          {tools.map((tool, i) => {
+            const Icon = tool.icon;
+            return (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.08 }}
+                className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 text-center"
+              >
+                <Icon className="mx-auto mb-4 text-cyan-400" size={40} />
+                <h3 className="text-lg font-semibold">{tool.name}</h3>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* FEATURES */}
+      <div className="mt-24 px-10 text-center">
+        <h2 className="text-3xl font-semibold mb-12">
+          Why Choose Etoolspot?
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { icon: Sparkles, text: "Modern UI Experience" },
+            { icon: Rocket, text: "Fast & Efficient Tools" },
+            { icon: FileText, text: "All-in-One Platform" },
+          ].map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div
+                key={i}
+                className="p-6 rounded-2xl bg-white/5 border border-white/10"
+              >
+                <Icon className="mx-auto mb-4 text-indigo-400" size={40} />
+                <p>{f.text}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* PRICING */}
+      <div className="mt-24 px-10 text-center">
+        <h2 className="text-3xl font-semibold mb-12">Pricing</h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {["Free", "Pro", "Premium"].map((plan, i) => (
+            <div
+              key={i}
+              className={`p-8 rounded-2xl border ${
+                plan === "Pro"
+                  ? "bg-gradient-to-r from-indigo-500/20 to-cyan-500/20 border-indigo-400"
+                  : "bg-white/5 border-white/10"
+              }`}
+            >
+              <h3 className="text-xl font-bold">{plan}</h3>
+              <p className="mt-4 text-gray-300">
+                {plan === "Free"
+                  ? "Basic tools access"
+                  : "Advanced features unlocked"}
+              </p>
+              <button className="mt-6 px-5 py-2 bg-indigo-500 rounded-xl">
+                Choose
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* FINAL CTA */}
+      <div className="mt-24 mb-16 text-center">
+        <h2 className="text-4xl font-bold">
+          Start Using Etoolspot Today 🚀
+        </h2>
+        <button
+          onClick={() => navigate("/signup")}
+          className="mt-6 px-8 py-3 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-xl hover:scale-105 transition"
+        >
+          Get Started Free
+        </button>
+      </div>
+    </div>
+  );
+}
