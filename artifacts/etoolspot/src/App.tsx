@@ -68,17 +68,10 @@ function Router() {
 }
 
 function GlobalSettingsApplier() {
-  // Directly reads localStorage initial setting to prevent flicker, 
-  // hooks handle live updates in settings page
   useEffect(() => {
-    try {
-      const val = localStorage.getItem('etoolspot_settings');
-      if (val) {
-        const settings = JSON.parse(val);
-        document.documentElement.style.setProperty('--primary', settings.primaryColor);
-        document.documentElement.style.setProperty('--secondary', settings.secondaryColor);
-      }
-    } catch(e) {}
+    // Apply saved theme (light/dark)
+    const theme = localStorage.getItem('etoolspot_theme') || 'dark';
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }, []);
   return null;
 }

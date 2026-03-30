@@ -1,0 +1,140 @@
+{
+  "project_name": "Etoolspot UI Upgrade - Premium SaaS Design",
+  "framework": "React + Vite",
+  "description": "Upgrade entire Etoolspot application UI to a premium SaaS design inspired by modern platforms like TripSync. Includes glassmorphism, gradient backgrounds, dashboard layout, and clean typography.",
+
+  "ui_transformation": {
+    "design_inspiration": "TripSync modern SaaS UI",
+    
+    "fonts": {
+      "primary": "Plus Jakarta Sans",
+      "secondary": "Manrope"
+    },
+
+    "theme": {
+      "light": {
+        "background": "#f8f9ff",
+        "surface": "#ffffff",
+        "primary": "#004ecb",
+        "secondary": "#006c51",
+        "text": "#121c2a"
+      },
+      "dark": {
+        "background": "#020617",
+        "surface": "#0f172a",
+        "primary": "#3b82f6",
+        "secondary": "#10b981",
+        "text": "#e2e8f0"
+      }
+    },
+
+    "style": [
+      "Glassmorphism panels with blur",
+      "Soft gradient backgrounds",
+      "Minimal clean UI",
+      "Rounded corners (xl radius)",
+      "Subtle shadows",
+      "Premium spacing system",
+      "High readability typography"
+    ],
+
+    "global_components": {
+      "navbar": {
+        "style": "Glass navbar with blur",
+        "content": "Show only current page/tool name",
+        "actions": ["theme toggle", "profile icon"],
+        "sticky": true
+      },
+
+      "sidebar": {
+        "style": "Minimal modern sidebar",
+        "items": ["Dashboard", "Tools", "Settings"],
+        "icons": true,
+        "collapsible": true
+      },
+
+      "cards": {
+        "style": "Glass + shadow",
+        "hover": "scale + shadow increase"
+      },
+
+      "buttons": {
+        "style": "Gradient primary buttons",
+        "effect": "hover scale + glow"
+      }
+    },
+
+    "pages_ui": {
+      "dashboard": {
+        "layout": "Modern analytics dashboard",
+        "components": [
+          "Stats cards (cleaned, encoded, shortened)",
+          "Recent activity",
+          "Quick actions",
+          "Visual analytics cards"
+        ]
+      },
+
+      "tools": {
+        "layout": "Split glass UI",
+        "input": "Left panel",
+        "output": "Right panel",
+        "tabs": ["Privacy Cleaner", "Encoder", "Decoder", "URL Shortener"],
+        "design": "Floating glass panels"
+      },
+
+      "settings": {
+        "layout": "Modern settings panel",
+        "sections": [
+          "Theme toggle",
+          "Data management",
+          "Export/import",
+          "Customization"
+        ]
+      }
+    },
+
+    "hero_section": {
+      "style": "Big bold heading + gradient highlight",
+      "heading_example": "Build tools fluidly with AI",
+      "subtext": "All-in-one platform for modern developers",
+      "layout": "Centered + animated"
+    },
+
+    "effects": {
+      "background_blur_circles": true,
+      "gradient_orbs": true,
+      "hover_animations": true,
+      "smooth_transitions": true
+    }
+  },
+
+  "tech_stack": {
+    "styling": "Tailwind CSS",
+    "fonts": "Google Fonts",
+    "animations": "Framer Motion"
+  },
+
+  "tailwind_customization": {
+    "borderRadius": {
+      "lg": "1.5rem",
+      "xl": "2rem"
+    },
+    "boxShadow": {
+      "soft": "0 24px 48px -12px rgba(18,28,42,0.08)"
+    }
+  },
+
+  "special_instructions": [
+    "Transform entire UI to TripSync style",
+    "Remove old UI styles completely",
+    "Use glassmorphism everywhere",
+    "Ensure light/dark mode works",
+    "Maintain responsiveness",
+    "Keep components reusable",
+    "Use modern spacing and typography",
+    "Optimize UI for premium SaaS feel"
+  ],
+
+  "run_command": "npm install && npm run dev"
+}

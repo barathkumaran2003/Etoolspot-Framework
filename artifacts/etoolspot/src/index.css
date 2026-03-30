@@ -1,12 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme inline {
-  --font-display: 'Chakra Petch', sans-serif;
-  --font-body: 'Exo 2', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Manrope', sans-serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
+  --color-surface: hsl(var(--surface));
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-secondary: hsl(var(--secondary));
@@ -21,86 +22,159 @@
   --color-destructive: hsl(var(--destructive));
 }
 
+/* ── Light Mode ── */
 :root {
-  /* Deep Navy / Cyberpunk Dark Theme */
-  --background: 230 25% 4%;
-  --foreground: 210 40% 98%;
-  
-  /* Neon Cyan */
-  --primary: 180 100% 50%;
-  --primary-foreground: 230 25% 4%;
-  
-  /* Neon Purple */
-  --secondary: 280 100% 65%;
-  --secondary-foreground: 210 40% 98%;
-  
-  /* Neon Pink */
-  --accent: 320 100% 60%;
-  --accent-foreground: 210 40% 98%;
-  
-  /* Glass and Muted */
-  --muted: 230 20% 12%;
-  --muted-foreground: 215 20% 65%;
-  
-  /* Borders and Cards */
-  --border: 230 25% 15%;
-  --card: 230 25% 6%;
-  --card-foreground: 210 40% 98%;
+  --background: 230 60% 98%;
+  --foreground: 215 37% 12%;
+  --surface: 0 0% 100%;
 
-  --destructive: 0 100% 60%;
+  --primary: 220 95% 45%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 160 84% 28%;
+  --secondary-foreground: 0 0% 100%;
+
+  --accent: 217 91% 60%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 220 20% 94%;
+  --muted-foreground: 215 16% 47%;
+
+  --border: 220 13% 88%;
+  --card: 0 0% 100%;
+  --card-foreground: 215 37% 12%;
+
+  --destructive: 0 84% 60%;
+
+  --shadow-soft: 0 4px 24px -4px rgba(18,28,66,0.10);
+  --shadow-card: 0 2px 12px -2px rgba(18,28,66,0.08);
+  --shadow-hover: 0 8px 32px -4px rgba(18,28,66,0.14);
+}
+
+/* ── Dark Mode ── */
+.dark {
+  --background: 222 47% 5%;
+  --foreground: 214 32% 91%;
+  --surface: 222 47% 9%;
+
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 160 84% 39%;
+  --secondary-foreground: 0 0% 100%;
+
+  --accent: 215 100% 70%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 217 33% 13%;
+  --muted-foreground: 215 20% 55%;
+
+  --border: 217 33% 16%;
+  --card: 222 47% 9%;
+  --card-foreground: 214 32% 91%;
+
+  --destructive: 0 72% 51%;
+
+  --shadow-soft: 0 4px 24px -4px rgba(0,0,0,0.4);
+  --shadow-card: 0 2px 12px -2px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 32px -4px rgba(0,0,0,0.5);
 }
 
 @layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
   body {
-    @apply bg-background text-foreground antialiased font-body min-h-screen selection:bg-primary/30 selection:text-primary;
-    background-image: 
-      radial-gradient(circle at 15% 50%, rgba(0, 255, 255, 0.03), transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(180, 0, 255, 0.03), transparent 25%);
+    @apply bg-background text-foreground antialiased font-body min-h-screen;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, hsl(var(--primary) / 0.07), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 110%, hsl(var(--secondary) / 0.06), transparent);
     background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-wide uppercase;
+    @apply font-display font-semibold;
   }
 }
 
 @layer utilities {
+  /* ── Glass Panel (sidebar / headers) ── */
   .glass-panel {
-    @apply bg-background/40 backdrop-blur-xl border border-white/5 shadow-2xl;
+    background: hsl(var(--surface) / 0.8);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid hsl(var(--border));
   }
-  
+
+  /* ── Glass Card ── */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-all duration-300;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
   }
 
   .glass-card:hover {
-    @apply border-primary/40 bg-white/10 shadow-[0_8px_32px_0_rgba(0,255,255,0.15)];
+    box-shadow: var(--shadow-hover);
+    border-color: hsl(var(--primary) / 0.3);
+    transform: translateY(-2px);
   }
 
-  .neon-text {
-    text-shadow: 0 0 15px hsl(var(--primary) / 0.5);
+  /* ── Gradient Buttons ── */
+  .btn-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 14px hsl(var(--primary) / 0.35);
+    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .neon-border {
-    @apply border border-primary/50 shadow-[0_0_15px_rgba(0,255,255,0.3),inset_0_0_15px_rgba(0,255,255,0.1)];
+  .btn-primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px hsl(var(--primary) / 0.45);
   }
 
-  .neon-border-secondary {
-    @apply border border-secondary/50 shadow-[0_0_15px_rgba(180,0,255,0.3),inset_0_0_15px_rgba(180,0,255,0.1)];
+  /* ── Saas Input ── */
+  .saas-input {
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
+
+  .saas-input:focus {
+    border-color: hsl(var(--primary) / 0.6);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12);
+    outline: none;
+  }
+
+  /* ── Gradient orb backgrounds ── */
+  .orb-primary {
+    background: radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%);
+  }
+  .orb-secondary {
+    background: radial-gradient(circle, hsl(var(--secondary) / 0.12), transparent 70%);
+  }
+
+  /* ── Stat badge ── */
+  .stat-badge {
+    background: hsl(var(--primary) / 0.1);
+    border: 1px solid hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+  }
+
+  /* Legacy compat */
+  .neon-border { border: 1px solid hsl(var(--primary) / 0.4); }
+  .neon-text { color: hsl(var(--primary)); }
 }
 
-/* Custom Scrollbar for the tech aesthetic */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full border border-background;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-primary/50;
-}
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }

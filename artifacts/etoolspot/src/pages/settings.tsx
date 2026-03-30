@@ -1,122 +1,177 @@
 import React, { useState } from "react";
 import { PageTransition, GlassCard, NeonButton, NeonInput } from "@/components/ui/shared";
-import { useCurrentUser, useUpdateUser } from "@/hooks/use-auth";
+import { useCurrentUser } from "@/hooks/use-auth";
 import { useUpdateUser as useMutationUpdateUser } from "@/hooks/use-users";
-import { UserCircle, Key, Palette } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
+import { UserCircle, KeyRound, Palette, Sun, Moon, Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
+
+const tabs = [
+  { id: "PROFILE", label: "Profile", icon: UserCircle },
+  { id: "SECURITY", label: "Security", icon: KeyRound },
+  { id: "APPEARANCE", label: "Appearance", icon: Palette },
+];
 
 export default function Settings() {
   const { data: user } = useCurrentUser();
   const { mutate: updateUser, isPending } = useMutationUpdateUser();
-  const [activeTab, setActiveTab] = useState('PROFILE');
+  const [activeTab, setActiveTab] = useState("PROFILE");
+  const { theme, toggleTheme } = useTheme();
 
   if (!user) return null;
 
   const handleProfileUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    updateUser({ id: user.id, updates: { username: fd.get('username') as string, mobile: fd.get('mobile') as string } }, {
-      onSuccess: () => toast({ title: "Profile updated via secure channel." })
-    });
+    updateUser(
+      { id: user.id, updates: { username: fd.get("username") as string, mobile: fd.get("mobile") as string } },
+      { onSuccess: () => toast({ title: "Profile updated successfully." }) }
+    );
   };
 
   const handleSecurityUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    updateUser({ id: user.id, updates: { password: fd.get('password') as string } }, {
-      onSuccess: () => {
-        toast({ title: "Security keys updated successfully." });
-        (e.target as HTMLFormElement).reset();
+    updateUser(
+      { id: user.id, updates: { password: fd.get("password") as string } },
+      {
+        onSuccess: () => {
+          toast({ title: "Password changed successfully." });
+          (e.target as HTMLFormElement).reset();
+        },
       }
-    });
+    );
   };
 
   return (
     <PageTransition>
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl text-foreground neon-text mb-2">System Configuration</h1>
-        <p className="text-muted-foreground">Modify local user variables and interface settings.</p>
+      <div className="mb-7">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">Settings</h1>
+        <p className="text-sm text-muted-foreground">Manage your account and preferences.</p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Settings Navigation */}
-        <div className="w-full md:w-64 space-y-2">
-          <button 
-            onClick={() => setActiveTab('PROFILE')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${activeTab === 'PROFILE' ? 'bg-primary/20 text-primary border border-primary/50' : 'hover:bg-white/5 text-muted-foreground'}`}
-          >
-            <UserCircle className="w-5 h-5" /> Base Profile
-          </button>
-          <button 
-            onClick={() => setActiveTab('SECURITY')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${activeTab === 'SECURITY' ? 'bg-secondary/20 text-secondary border border-secondary/50' : 'hover:bg-white/5 text-muted-foreground'}`}
-          >
-            <Key className="w-5 h-5" /> Security
-          </button>
-          <button 
-            onClick={() => setActiveTab('APPEARANCE')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${activeTab === 'APPEARANCE' ? 'bg-accent/20 text-accent border border-accent/50' : 'hover:bg-white/5 text-muted-foreground'}`}
-          >
-            <Palette className="w-5 h-5" /> Appearance
-          </button>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Tab nav */}
+        <div className="w-full md:w-52 shrink-0">
+          <div className="flex md:flex-col gap-1">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-left w-full ${
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <Icon size={16} className="shrink-0" />
+                  {tab.label}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Content Area */}
+        {/* Content */}
         <div className="flex-1">
-          {activeTab === 'PROFILE' && (
-            <GlassCard glow className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h2 className="text-2xl font-display font-bold mb-6">Base Identity Profile</h2>
-              <form onSubmit={handleProfileUpdate} className="space-y-6 max-w-md">
-                <div className="flex items-center gap-6 mb-8">
-                  <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center text-3xl font-display font-bold text-primary shadow-[0_0_15px_rgba(0,255,255,0.4)]">
-                    {user.username.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-2">Avatar data pulled from initial hash.</p>
-                    <NeonButton type="button" variant="ghost" className="py-2 px-4 text-xs">Update Hash</NeonButton>
-                  </div>
-                </div>
-
-                <NeonInput label="Codename" name="username" defaultValue={user.username} required />
-                <NeonInput label="Email Vector" defaultValue={user.email} disabled className="opacity-50" />
-                <NeonInput label="Comm Link" name="mobile" defaultValue={user.mobile} required />
-                
-                <div className="pt-4">
-                  <NeonButton type="submit" isLoading={isPending}>Commit Changes</NeonButton>
-                </div>
-              </form>
-            </GlassCard>
-          )}
-
-          {activeTab === 'SECURITY' && (
-            <GlassCard className="animate-in fade-in slide-in-from-bottom-4 duration-500 neon-border-secondary">
-              <h2 className="text-2xl font-display font-bold mb-6">Cryptographic Security</h2>
-              <form onSubmit={handleSecurityUpdate} className="space-y-6 max-w-md">
-                <NeonInput label="Current Security Key" type="password" required placeholder="••••••••" />
-                <NeonInput label="New Security Key" name="password" type="password" required placeholder="••••••••" />
-                <div className="pt-4">
-                  <NeonButton variant="secondary" type="submit" isLoading={isPending}>Re-Encrypt</NeonButton>
-                </div>
-              </form>
-            </GlassCard>
-          )}
-
-          {activeTab === 'APPEARANCE' && (
-            <GlassCard className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h2 className="text-2xl font-display font-bold mb-6">Interface Visuals</h2>
-              <div className="space-y-6">
-                <div>
-                  <p className="mb-4">Theme preset is locked to <span className="text-primary font-bold">Cyber Neon</span> protocol. Further customizations are handled via Admin Panel global overrides.</p>
-                  <div className="p-4 bg-black/40 border border-white/10 rounded-xl flex items-center justify-between">
-                    <span>Holographic Mode</span>
-                    <div className="w-12 h-6 bg-primary/20 rounded-full border border-primary relative flex items-center px-1">
-                      <div className="w-4 h-4 rounded-full bg-primary absolute right-1 shadow-[0_0_10px_#0ff]" />
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            {activeTab === "PROFILE" && (
+              <GlassCard>
+                <h2 className="text-lg font-bold text-foreground mb-6">Profile Information</h2>
+                <form onSubmit={handleProfileUpdate} className="space-y-5 max-w-md">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold">
+                      {user.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">{user.username}</p>
+                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                      <span className="inline-block mt-1 text-xs font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                        {user.subscription}
+                      </span>
                     </div>
                   </div>
+
+                  <NeonInput label="Display Name" name="username" defaultValue={user.username} required />
+                  <NeonInput label="Email" defaultValue={user.email} disabled className="opacity-60" />
+                  <NeonInput label="Mobile" name="mobile" defaultValue={user.mobile} required />
+
+                  <div className="pt-2">
+                    <NeonButton type="submit" variant="primary" isLoading={isPending}>
+                      <Check size={15} /> Save Changes
+                    </NeonButton>
+                  </div>
+                </form>
+              </GlassCard>
+            )}
+
+            {activeTab === "SECURITY" && (
+              <GlassCard>
+                <h2 className="text-lg font-bold text-foreground mb-2">Change Password</h2>
+                <p className="text-sm text-muted-foreground mb-6">Update your account password to keep your account secure.</p>
+                <form onSubmit={handleSecurityUpdate} className="space-y-5 max-w-md">
+                  <NeonInput label="Current Password" type="password" required placeholder="••••••••" />
+                  <NeonInput label="New Password" name="password" type="password" required placeholder="••••••••" minLength={6} />
+                  <div className="pt-2">
+                    <NeonButton type="submit" variant="primary" isLoading={isPending}>
+                      <Check size={15} /> Update Password
+                    </NeonButton>
+                  </div>
+                </form>
+              </GlassCard>
+            )}
+
+            {activeTab === "APPEARANCE" && (
+              <GlassCard>
+                <h2 className="text-lg font-bold text-foreground mb-2">Appearance</h2>
+                <p className="text-sm text-muted-foreground mb-6">Customize how Etoolspot looks on your device.</p>
+
+                <div className="space-y-4">
+                  <p className="text-sm font-medium text-foreground">Theme</p>
+                  <div className="grid grid-cols-2 gap-3 max-w-sm">
+                    <button
+                      onClick={() => { if (theme !== "light") toggleTheme(); }}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 ${
+                        theme === "light"
+                          ? "border-primary bg-primary/8"
+                          : "border-border hover:border-border/80"
+                      }`}
+                    >
+                      <Sun size={22} className={theme === "light" ? "text-primary" : "text-muted-foreground"} />
+                      <span className={`text-sm font-semibold ${theme === "light" ? "text-primary" : "text-muted-foreground"}`}>Light</span>
+                      {theme === "light" && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">Active</span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => { if (theme !== "dark") toggleTheme(); }}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 ${
+                        theme === "dark"
+                          ? "border-primary bg-primary/8"
+                          : "border-border hover:border-border/80"
+                      }`}
+                    >
+                      <Moon size={22} className={theme === "dark" ? "text-primary" : "text-muted-foreground"} />
+                      <span className={`text-sm font-semibold ${theme === "dark" ? "text-primary" : "text-muted-foreground"}`}>Dark</span>
+                      {theme === "dark" && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">Active</span>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </GlassCard>
-          )}
+              </GlassCard>
+            )}
+          </motion.div>
         </div>
       </div>
     </PageTransition>
